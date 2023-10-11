@@ -46,6 +46,8 @@
       }
     } ?>
   </ul>  */
+ 
+ 
 
 ?>
 <!DOCTYPE html>
@@ -60,33 +62,57 @@
 <body>
   <h1>Lista degli Hotel</h1>
  
+  <form class="mb-3 d-flex" method="get">
+    <input type="text" name="filter" id="filter" class="form-control w-50" placeholder="cerca" aria-describedby="helpId">
+   <button type="submit"> cerca</button>
+  </form>
 
+<!-- tabella -->
   <table class="table">
-  <thead>
-  <!-- metodo con escho  -->
-    <tr>
-    <?php foreach($hotels[0] as $key =>$value){
-      $text_key = str_replace('_', ' ', $key);
-      echo "<th scope='col' class=' text-capitalize'>$text_key</th>";
-    }?>
-    </tr>
-  </thead>
-  <tbody>
-   <!-- metodo senza echo -->
-      <?php foreach($hotels as $hotel):?>
+    <thead>
+      <!-- metodo con escho  -->
       <tr>
-        <?php foreach($hotel as $dati):?>
-          <?php if ($hotel = is_numeric($dati) || is_bool($dati)):?>
-            <td class="text-center"><?php echo $dati; ?> </td>
-         <?php else:?>
-           <td><?php echo $dati; ?> </td>
-           <?php endif;?>
-     
-        <?php endforeach; ?>
+      <?php foreach($hotels[0] as $key =>$value){
+        $text_key = str_replace('_', ' ', $key);
+        echo "<th scope='col' class=' text-center text-capitalize'>$text_key</th>";
+      }?>
       </tr>
-      <?php endforeach; ?>
- 
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <?php $filter = isset($_GET["filter"]) ? $_GET["filter"] : null;
+     
+      
+     /*  $hotel_filter = array_filter($hotels, function($hotel) use ($filter){
+        var_dump($filter === null);
+        return $filter === null || $hotel["parking"] === $filter;
+      }); */
+      
+        $hotel_filter = array_filter($hotels, function($hotel) use ($filter){
+            return $hotel["parking"] == true || $filter == null;  
+        });
+      
+     
+        foreach($hotel_filter as $hotel):?>
+        <tr>
+       
+          <?php foreach($hotel as $dati):?>
+            <?php if ($hotel = is_numeric($dati) ):?>
+              <td class="text-center">
+                <?php echo $dati; ?> 
+              </td>
+            
+              <?php else  :?>
+                <td >
+                <?php echo $dati; ?> 
+              </td>
+             
+              
+              
+            <?php endif;?>
+          <?php endforeach; ?>
+        </tr>
+        <?php endforeach; ?>
+    </tbody>
+  </table>
 </body>
 </html>
